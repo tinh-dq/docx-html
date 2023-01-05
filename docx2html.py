@@ -1,7 +1,7 @@
 import os
 import mammoth as mammoth
 from glob import glob
-
+from bs4 import BeautifulSoup
 
 def save(texts, file_name):
     with open(file_name, "w", encoding="utf-8") as f:
@@ -29,4 +29,6 @@ for f in x:
     with open(f, "rb") as docx_file:
         result = mammoth.convert_to_html(docx_file)
         text = form.format(text=result.value)
-        save(text, f.replace("docx", "html"))
+        soup = BeautifulSoup(text, 'html.parser')
+        bt = soup.prettify()
+        save(bt, f.replace("docx", "html"))
