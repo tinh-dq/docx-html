@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,shrink-to-fit=no"
+    />
+    <title>Auto converter Word2HTML content</title>
+    <link rel="stylesheet" href="./css/file-dragNdrop-style.css" />
+    <script src="https://cdn.ckeditor.com/4.14.1/standard-all/ckeditor.js"></script>
+    <style>
+      .column {
+        float: left;
+        width: 47%;
+      }
+      textarea {
+        width: 100%;
+      }
+      .rename-form {
+        border-radius: 12px;
+        background-color: #f8f8f8;
+        border: #999 2px dashed;
+        margin: auto;
+      }
+      .rename_label {
+        min-width: 120px;
+        display: inline-block;
+      }
+      .rename_textarea {
+        resize: vertical;
+        width: calc(100% - 130px);
+        min-width: 250px;
+      }
+      @media (max-width: 1100px) {
+        .column {
+          width: 100%;
+        }
+      }
+      legend {
+        text-align: left;
+      }
+      .inline-div {
+        float: left;
+        width: 50%;
+      }
+      .inline-txtarea {
+        width: 98%;
+        margin: 1%;
+      }
+      #drop_file_zone {
+        background-color: #f8f8f8;
+        border: #999 2px dashed;
+        height: 100px;
+        font-size: 18px;
+      }
+      #drag_upload_file {
+        width: 50%;
+        margin: 0 auto;
+      }
+      #drag_upload_file p {
+        text-align: center;
+        margin: 2px;
+      }
+    </style>
+  </head>
+  <body style="text-align: center">
+    Name:
+    <input
+      id="fileName"
+      type="text"
+      name="fileName"
+      size="60"
+      placeholder="Name of saving file"
+    />
+    Debug:
+    <input
+      id="debug"
+      type="checkbox"
+      name="debug"
+      size="30"
+      title="If checked, console will show logs for each text-object"
+    /><br /><br />
+    <label for="rename_option">Rename option: </label>
+    <select
+      name="rename_option"
+      id="rename_option"
+      onchange="onRenameOptionChange()"
+    >
+      <option value="none">None</option>
+      <option value="by_script">By script</option>
+      <option value="by_regex">By RegEx</option>
+    </select>
+    <br /><br />
+
+    <div id="rename_option_form"></div>
+    <br />
+
+    <div
+      id="drop_file_zone"
+      ondrop="readFiles(event)"
+      ondragover="return false"
+    >
+      <div id="drag_upload_file">
+        <p>Drop file(s) here</p>
+        <p>or</p>
+        <input
+          type="file"
+          id="selectfile"
+          onchange="readFiles(event)"
+          multiple
+        />
+        <p>for processing</p>
+      </div>
+    </div>
+    <br />
+    <textarea id="inputText" rows="40"></textarea>
+    <div class="row">
+      <fieldset class="column">
+        <label for="templateTxt">Template:</label><br />
+        <textarea id="templateTxt" rows="50">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="eng" xml:lang="eng">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />${table_style}
+  </head>
+  <body dir="auto">
+    ${body}
+  </body>
+</html>
+</textarea
+        >
+      </fieldset>
+      <fieldset class="column">
+        <label for="exampleTextarea">Output:</label><br />
+        <textarea id="exampleTextarea" rows="50"></textarea>
+      </fieldset>
+    </div>
+    <script src="./scripts/ckeditor4+Word+Zip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.11/mammoth.browser.min.js"></script>
+    <script src="./scripts/api/jszip.min.js"></script>
+    <script src="./scripts/api/FileSaver.js"></script>
+    <script src="./scripts/api/script.js"></script>
+    <script src="./scripts/rename.js"></script>
+    <script>
+      function onRenameOptionChange() {
+        renameOption = getRenameOption();
+        var renameForm = document.getElementById("rename_option_form");
+        if (renameOption == "by_regex") {
+          renameForm.innerHTML = `
+      <fieldset class="rename-form">
+        <label class="rename_label">Find RegEx:</label>
+        <textarea class="rename_textarea" id="rename_regex">.docx</textarea><br />
+        <label class="rename_label">Replace with:</label>
+        <textarea class="rename_textarea" id="rename_regex_replace">.html</textarea>
+    </fieldset>`;
+        } else if (renameOption == "by_script") {
+          renameForm.innerHTML = `
+      <fieldset class="rename-form">
+        <label>Script:</label><br />
+        <textarea id="rename_script" rows="5">
+REPLACE(.docx,.html)</textarea>
+      </fieldset>`;
+        } else {
+          renameForm.innerHTML = "";
+        }
+      }
+    </script>
+  </body>
+</html>
