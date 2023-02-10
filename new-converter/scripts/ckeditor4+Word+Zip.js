@@ -83,6 +83,7 @@ function saveTextToFile() {
 
 // Process 'file' input box
 function readFiles(event) {
+  event.preventDefault();
   var renameOption = getRenameOption();
   if (renameOption == "by_script") {
     var rename_script = document.getElementById("rename_script").value;
