@@ -5,26 +5,40 @@ function parseScript(script) {
   for (var i = 0; i < lines.length; i++) {
     lines[i] = lines[i].trim();
     if (lines[i] == "") continue;
-    var function_name = lines[i].substring(0, lines[i].indexOf("(")).toLowerCase().trim();
-    var body = lines[i].substring(lines[i].indexOf("(") + 1, lines[i].lastIndexOf(")"));
-
-    var args = body.split(",");
+    if (!lines[i].includes("(") || !lines[i].includes(")")) return false;
+    var function_name = lines[i]
+      .substring(0, lines[i].indexOf("("))
+      .toLowerCase()
+      .trim();
+    var args = lines[i]
+      .substring(lines[i].indexOf("(") + 1, lines[i].lastIndexOf(")"))
+      .split(",");
     switch (function_name) {
       case "insert":
         if (args.length != 2) {
-          alert('"' + function_name + '" needs two arguments');
+          alert(
+            "Line " + (i + 1) + ' "' + function_name + '" needs two arguments'
+          );
           return false;
         }
         break;
       case "replace":
         if (args.length % 2 != 0) {
-          alert('"' + function_name + '" needs an even number of arguments: 2, 4, 6,...');
+          alert(
+            "Line " +
+              (i + 1) +
+              ' "' +
+              function_name +
+              '" needs an even number of arguments: 2, 4, 6,...'
+          );
           return false;
         }
         break;
       case "delete":
         if (args.length != 2) {
-          alert('"' + function_name + '" needs two arguments');
+          alert(
+            "Line " + (i + 1) + ' "' + function_name + '" needs two arguments'
+          );
           return false;
         }
         break;
@@ -47,7 +61,10 @@ function runScript(text) {
         break;
       case "replace":
         for (var j = 0; j < script_data[i].args.length; j += 2) {
-          output = output.replace(script_data[i].args[j], script_data[i].args[j + 1]);
+          output = output.replace(
+            script_data[i].args[j],
+            script_data[i].args[j + 1]
+          );
         }
         break;
       case "delete":
@@ -60,10 +77,11 @@ function runScript(text) {
           arg0 = arg1;
           arg1 = tmp;
         }
-        output = output.substring(0, arg0) + output.substring(arg1 + 1, output.length);
+        output =
+          output.substring(0, arg0) + output.substring(arg1 + 1, output.length);
         break;
       case "remove":
-        for (var j = 0; j < script_data[i].args.length; j ++) {
+        for (var j = 0; j < script_data[i].args.length; j++) {
           output = output.replace(script_data[i].args[j], "");
         }
         break;

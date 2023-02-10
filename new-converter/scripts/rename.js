@@ -9,9 +9,9 @@ function getOutputName(fileName) {
     case "by_regex":
       return getOutputNameByRegex(fileName);
     case "by_script":
-      getOutputNameByScript(fileName);
+      return getOutputNameByScript(fileName);
     default:
-      return fileName.replace(".docx", ".html");
+      return fileName.substring(0, fileName.lastIndexOf(".")) + ".html";
   }
 }
 
