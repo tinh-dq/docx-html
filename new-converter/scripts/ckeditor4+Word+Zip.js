@@ -1,4 +1,3 @@
-
 let zip,
   htmlZip,
   cnt = 0,
@@ -6,7 +5,7 @@ let zip,
   isDebugOn = false,
   isParseDone = false,
   inputText = "";
-  CKEDITOR.replace("inputText", {
+CKEDITOR.replace("inputText", {
   removeButtons: "PasteFromWord",
   toolbar: [
     {
@@ -69,7 +68,6 @@ let zip,
   // Enabling extra plugins, available in the full-all preset: https://ckeditor.com/cke4/presets
   extraPlugins: "colorbutton,font,justify,tableresize,pastefromword,liststyle",
 }).on("change", function (e) {
-  console.log("Processing...");
   document.getElementById("exampleTextarea").value = e.editor.getData();
   inputText = modifyHtml(e.editor.getData());
   displayResult(inputText);
@@ -179,24 +177,30 @@ String.prototype.turning = function () {
       // remove office tags
       .replace(/<\/?o[^>]*>/g, "")
       //remove tabs
-      .replace(/&nbsp;|[\r\n]+/gi, " ")
+      .replace(/&nbsp;|[\t\r\n]+/gi, " ")
       // remove inline styles
-      .replace(' style="mso-bidi-font-weight: normal"', "")
+      .replace(/ style="((?!(center|right|light-through|underline|")).)*"/g, "")
+      .replace(/<span>((?!(<\/span>)).)*<\/span>/g, "$1")
       // open new tab instead
-      .replace("<a href", "<a target=_blank href")
+      .replace(/<a href/g, "<a target=_blank href")
       .replace(/<br\s\/>/g, "<br>")
       // remove multi space
       .replace(/\s\s+/g, " ")
+      .replace(/ (<p>|<br>|<\/p>)/g, "$1")
       // replace - by \u2013
-      .replace(/(<br>|<p\/>|<p>)-/g, "$1\u2013")
+      .replace(/(<br>|<\/p>|<p>)-/g, "$1\u2013")
       // remove empty rows
-      .replace("<tr><td></td></tr>", "")
+      .replace(/<tr>(<td><\/td>)+<\/tr>/g, "")
+      // remove table style
+      .replace(/<table [^>]*>/g, "<table>")
+      //remove span not has style
+      .replace(/<span>((?!(<\/span>)).)*<\/span>/g, "$1")
   );
 };
 
 function modifyHtml(htmlCode) {
   var text_obj = {};
-  text_obj["table_style"] = htmlCode.includes("<table>") ? table_style : "";
+  text_obj["table_style"] = htmlCode.includes("<table") ? table_style : "";
   text_obj["body"] = htmlCode.turning();
   return document.getElementById("templateTxt").value.fillTemplate(text_obj);
 }

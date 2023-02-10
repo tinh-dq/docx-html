@@ -25,7 +25,7 @@ legend {
 }
 .column {
   float: left;
-  width: 47%;
+  width: calc(100% - 32px);
 }
 textarea {
   width: 100%;
@@ -45,9 +45,9 @@ textarea {
   width: calc(100% - 130px);
   min-width: 250px;
 }
-@media (max-width: 1100px) {
+@media (min-width: 1200px) {
   .column {
-    width: 100%;
+    width: calc(50% - 32px);
   }
 }
 .inline-div {
