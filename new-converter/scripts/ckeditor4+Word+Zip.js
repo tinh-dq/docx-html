@@ -66,7 +66,7 @@ CKEDITOR.replace("inputText", {
     },
   ],
   // Enabling extra plugins, available in the full-all preset: https://ckeditor.com/cke4/presets
-  extraPlugins: "colorbutton,font,justify,tableresize,pastefromword,liststyle",
+  extraPlugins: "colorbutton, font, justify, tableresize, pastefromword, liststyle",
 }).on("change", function (e) {
   document.getElementById("exampleTextarea").value = e.editor.getData();
   inputText = modifyHtml(e.editor.getData());
@@ -202,7 +202,9 @@ function modifyHtml(htmlCode) {
   var text_obj = {};
   text_obj["table_style"] = htmlCode.includes("<table") ? table_style : "";
   text_obj["body"] = htmlCode.turning();
-  return document.getElementById("templateTxt").value.fillTemplate(text_obj);
+  var ret = document.getElementById("templateTxt").value.fillTemplate(text_obj);
+  var ret = html_beautify(ret);
+  return ret;
 }
 
 function saveToFile(htmlCode, fileName) {
